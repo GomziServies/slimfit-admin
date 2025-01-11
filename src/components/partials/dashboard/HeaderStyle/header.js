@@ -55,7 +55,7 @@ const Header = memo((props) => {
           <Link to="/dashboard" className="navbar-brand">
             <Logo color={true} />
           </Link>
-          <div
+          {/* <div
             className="sidebar-toggle"
             data-toggle="sidebar"
             data-active="true"
@@ -69,7 +69,7 @@ const Header = memo((props) => {
                 />
               </svg>
             </i>
-          </div>
+          </div> */}
 
           <Navbar.Collapse id="navbarSupportedContent" className='d-none d-md-block'>
             <Nav

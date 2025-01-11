@@ -56,7 +56,7 @@ const SettingOffCanvas = memo((props) => {
   });
   return (
     <Fragment>
-      <div
+      {/* <div
         className="btn btn-fixed-end btn-warning btn-icon btn-setting"
         onClick={(e) => {
           e.stopPropagation();
@@ -89,7 +89,7 @@ const SettingOffCanvas = memo((props) => {
             strokeLinejoin="round"
           ></circle>
         </svg>
-      </div>
+      </div> */}
 
       <Offcanvas
         show={show}

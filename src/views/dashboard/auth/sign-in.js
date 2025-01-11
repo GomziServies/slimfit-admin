@@ -4,7 +4,7 @@ import { BsEye, BsEyeSlash } from 'react-icons/bs';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Card from '../../../components/Card';
-import Logo from '../../../assets/images/fitit-logo.png';
+import Logo from '../../../assets/images/slimfit-logo.png';
 import img1 from '../../../assets/images/bg3.png';
 import img2 from '../../../assets/images/right-side-bg.png';
 import ContactsIcon from '@mui/icons-material/Contacts';

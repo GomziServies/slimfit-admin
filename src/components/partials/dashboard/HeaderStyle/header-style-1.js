@@ -53,7 +53,7 @@ const Header = memo((props) => {
           <Link to="/dashboard" className="navbar-brand">
             <Logo color={true} />
           </Link>
-          <div
+          {/* <div
             className="sidebar-toggle"
             data-toggle="sidebar"
             data-active="true"
@@ -67,7 +67,7 @@ const Header = memo((props) => {
                 />
               </svg>
             </i>
-          </div>
+          </div> */}
           <Navbar.Toggle aria-controls="navbarSupportedContent">
             <span className="navbar-toggler-icon">
               <span className="mt-2 navbar-toggler-bar bar1"></span>
