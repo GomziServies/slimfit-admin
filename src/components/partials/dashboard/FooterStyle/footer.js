@@ -8,7 +8,7 @@ const Footer = () => {
                 <div className="right-panel">
                     ©
                     <span className="text-gray">
-                    Design and Developed 
+                        Design and Developed
                     </span> by <Link to="https://gcsconsultant.com/">Fitit Official</Link>.
                 </div>
             </div>
