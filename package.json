@@ -28,7 +28,7 @@
     "bootstrap": "^5.2.3",
     "choices.js": "^10.1.0",
     "date-fns": "^2.30.0",
-    "dayjs": "^1.11.10",
+    "dayjs": "^1.11.13",
     "fontkit": "^2.0.2",
     "fs.promises": "^0.1.2",
     "fslightbox-react": "^1.6.2-2",

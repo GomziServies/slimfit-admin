@@ -80,7 +80,7 @@ const Sidebar = memo((props) => {
         data-sidebar="responsive"
       >
         <div className="sidebar-header d-flex align-items-center justify-content-center">
-          <Link to="/dashboard" className="navbar-brand">
+          <Link to="/dashboard/sales-list" className="navbar-brand">
             <Logo />
           </Link>
           <div

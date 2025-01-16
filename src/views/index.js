@@ -153,7 +153,7 @@ const Index = () => {
                 <div>
                   <Link
                     className="btn btn-light bg-white d-flex"
-                    to="/dashboard"
+                    to="/dashboard/sales-list"
                     target="_black"
                   >
                     <svg

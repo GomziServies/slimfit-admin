@@ -43,9 +43,9 @@ const SignIn = () => {
 
       toast.success("Login successful", { position: "top-right", className: 'custom-toast' });
 
-      // Redirect to the dashboard
+      // Redirect to the dashboard/sales-list
       setTimeout(() => {
-        window.location.href = "/dashboard";
+        window.location.href = "/dashboard/sales-list";
       }, 2000);
     } catch (error) {
       console.error("Login failed:", error);

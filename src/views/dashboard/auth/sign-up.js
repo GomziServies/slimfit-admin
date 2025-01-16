@@ -16,7 +16,7 @@ const SignUp = () => {
                 <Card className="card-transparent auth-card shadow-none d-flex justify-content-center mb-0">
                   <Card.Body>
                     <Link
-                      to="/dashboard"
+                      to="/"
                       className="navbar-brand d-flex align-items-center mb-3"
                     >
                       <svg
@@ -160,7 +160,7 @@ const SignUp = () => {
                       </Row>
                       <div className="d-flex justify-content-center">
                         <Button
-                          onClick={() => history.push('/dashboard')}
+                          onClick={() => history.push('/dashboard/sales-list')}
                           type="button"
                           variant="primary"
                         >

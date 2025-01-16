@@ -7,11 +7,11 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     (config) => {
-        // const authorization = localStorage.getItem('authorization');
+        const authorization = localStorage.getItem('authorization');
 
-        // if (authorization) {
-        //     config.headers['authorization'] = authorization;
-        // }
+        if (authorization) {
+            config.headers['authorization'] = authorization;
+        }
 
         return config;
     },
@@ -20,17 +20,17 @@ axiosInstance.interceptors.request.use(
     },
 );
 
-// axiosInstance.interceptors.response.use(
-//     (response) => response,
-//     (error) => {
-//         const { status } = error.response;
-//         if (status === 400 || status === 403) {
-//             localStorage.removeItem('authorization');
-//             localStorage.removeItem('adminType');
-//             window.location.href = '/auth/sign-in';
-//         }
-//         return Promise.reject(error);
-//     }
-// );
+axiosInstance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        const { status } = error.response;
+        if (status === 400 || status === 403) {
+            localStorage.removeItem('authorization');
+            localStorage.removeItem('adminType');
+            window.location.href = '/auth/sign-in';
+        }
+        return Promise.reject(error);
+    }
+);
 
 export default axiosInstance;
