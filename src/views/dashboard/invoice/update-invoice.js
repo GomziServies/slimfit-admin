@@ -107,7 +107,7 @@ const CreateInvoice = () => {
   
   useEffect(() => {
     fetchInvoice();
-  }, []);
+  }, [fetchInvoice]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
