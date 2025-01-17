@@ -20,17 +20,4 @@ axiosInstance.interceptors.request.use(
     },
 );
 
-axiosInstance.interceptors.response.use(
-    (response) => response,
-    (error) => {
-        const { status } = error.response;
-        if (status === 400 || status === 403) {
-            localStorage.removeItem('authorization');
-            localStorage.removeItem('adminType');
-            window.location.href = '/auth/sign-in';
-        }
-        return Promise.reject(error);
-    }
-);
-
 export default axiosInstance;

@@ -14,6 +14,7 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
@@ -29,6 +30,7 @@ const SignIn = () => {
 
   const handleSignIn = async (e) => {
     e.preventDefault();
+    setLoading(true)
 
     if (!email || !password) {
       toast.error("Please enter both email and password.");
@@ -42,23 +44,27 @@ const SignIn = () => {
       localStorage.setItem("authorization", token);
 
       toast.success("Login successful", { position: "top-right", className: 'custom-toast' });
-
-      // Redirect to the dashboard/sales-list
-      setTimeout(() => {
-        window.location.href = "/dashboard/sales-list";
-      }, 2000);
+      window.location.href = "/dashboard/sales-list";
     } catch (error) {
       console.error("Login failed:", error);
 
-      toast.error("Login failed. Please check your details.", {
+      toast.error(error.response.data.message, {
         position: "top-right",
         className: 'custom-toast'
       });
     }
+    setLoading(false)
   };
 
   return (
     <>
+      {loading && (
+        <div className="loader-background">
+          <div className="spinner-box">
+            <div className="three-quarter-spinner"></div>
+          </div>
+        </div>
+      )}
       <section className="login-content">
         <Row className="m-0 align-items-center vh-100">
           <Col md="6" className='d-none d-md-block' style={{ backgroundImage: `url(${img1})`, backgroundSize: 'cover', height: '100vh' }}>
