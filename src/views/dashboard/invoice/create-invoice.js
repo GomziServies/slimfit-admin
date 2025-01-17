@@ -18,21 +18,22 @@ const CreateInvoice = () => {
   const [userList, setUserList] = useState([]);
   const pdfContainerRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loadingOne, setLoadingOne] = useState(false);
 
   // Invoice Data Get
   const [invoiceData, setInvoiceData] = useState({
     invoice_number: "",
     date: "",
-    name: "Brijesh Prajapati",
-    email: "brijesh8866@gmail.com",
-    mobile: "8866761664",
+    name: "",
+    email: "",
+    mobile: "",
     branch_name: "",
-    address: "katargam",
-    item_name: "testing",
-    payment_method: "Cash",
-    net_amount: "10000",
-    paid_amount: "6000",
-    note: "demo notes",
+    address: "",
+    item_name: "",
+    payment_method: "",
+    net_amount: "",
+    paid_amount: "",
+    note: "",
     due_date: "",
   });
 
@@ -54,8 +55,8 @@ const CreateInvoice = () => {
   });
 
   const handleDownloadPDF = () => {
+    setLoadingOne(true);
     const element = pdfContainerRef.current;
-
     if (element) {
       const options = {
         margin: 10,
@@ -64,14 +65,15 @@ const CreateInvoice = () => {
         html2canvas: { scale: 4, useCORS: true },
         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
       };
-
       html2pdf(element, options);
+      setLoadingOne(false);
     } else {
       toast.error("Error generating PDF. Please try again.");
     }
   };
 
   useEffect(() => {
+    setLoadingOne(true);
     const fetchExpenses = async () => {
       try {
         const response = await axiosInstance.get("/invoice/get");
@@ -86,10 +88,9 @@ const CreateInvoice = () => {
         }
       } catch (error) {
         console.error("Error fetching Invoice:", error);
-        toast.error("Error fetching Invoice");
       }
     };
-
+    setLoadingOne(false);
     fetchExpenses();
   }, []);
 
@@ -113,6 +114,7 @@ const CreateInvoice = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
+      setLoadingOne(true);
       const payload = {
         ...invoiceData,
         net_amount: parseInt(invoiceData.net_amount),
@@ -121,9 +123,23 @@ const CreateInvoice = () => {
         due_date: dayjs(invoiceData.due_date).format("YYYY/MM/DD"),
       };
 
-      console.log(payload);
-
-      const response = await axiosInstance.post("/invoice/create", payload);
+      const response = await axiosInstance.post("/invoice/create", payload);  
+      setLoadingOne(false);
+      setInvoiceData({
+        user_id: "",
+        invoice_number: "",
+        date: "",
+        name: "",
+        email: "",
+        mobile: "",
+        address: "",
+        item_name: "",
+        payment_method: "",
+        net_amount: "",
+        paid_amount: "",
+        note: "",
+        due_date: "",
+      });
 
       if (response.data && response.data.message === "success") {
         const invoice = response.data.data;
@@ -143,22 +159,6 @@ const CreateInvoice = () => {
           note: invoice.note,
           due_date: invoice.due_date,
         }));
-
-        setInvoiceData({
-          user_id: "",
-          invoice_number: "",
-          date: "",
-          name: "",
-          email: "",
-          mobile: "",
-          address: "",
-          item_name: "",
-          payment_method: "",
-          net_amount: "",
-          paid_amount: "",
-          note: "",
-          due_date: "",
-        });
 
         toast.success("Invoice added successfully!");
         setIsSubmitting(false);
@@ -188,10 +188,10 @@ const CreateInvoice = () => {
         e.target.reset();
         toast.success("Invoice added successfully!");
       }
+
     } catch (error) {
       setIsSubmitting(false);
       console.error("Error creating Invoice:", error);
-      toast.error("Error creating Invoice. Please try again.");
     }
   };
 
@@ -214,7 +214,6 @@ const CreateInvoice = () => {
       }));
     } catch (error) {
       console.error("Error fetching user data:", error);
-      toast.error("Error fetching user data");
     }
   };
 
@@ -222,11 +221,12 @@ const CreateInvoice = () => {
     // Fetch user data when the component mounts
     const fetchUserData = async () => {
       try {
+        setLoadingOne(true);
         const response = await axiosInstance.get("/user/get");
         setUserList(response.data.data);
+        setLoadingOne(false);
       } catch (error) {
         console.error("Error fetching user data:", error);
-        toast.error("Error fetching user data");
       }
     };
 
@@ -245,35 +245,15 @@ const CreateInvoice = () => {
     companyThemeColor: "",
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // const companyResponse = await axiosInstance.get('/company/get');
-        // if (companyResponse.data.data.length > 0) {
-        //    const companyData = companyResponse.data.data[0];
-        //    setFormData((prevData) => ({
-        //       ...prevData,
-        //       company_id: companyData._id,
-        //       companyName: companyData.company_name,
-        //       companyAddress: companyData.company_address,
-        //       companyMobile: companyData.company_mobile,
-        //       companyEmail: companyData.company_email,
-        //       companyGST: companyData.company_gst,
-        //       companyLogoUrl: companyData.company_logo_url,
-        //       companyThemeColor: companyData.company_theme_color,
-        //    }));
-        // }
-      } catch (error) {
-        console.error("Error fetching admin details:", error);
-        toast.error("Error fetching admin details");
-      }
-    };
-
-    fetchData();
-  }, []);
-
   return (
     <>
+      {loadingOne && (
+        <div className="loader-background">
+          <div className="spinner-box">
+            <div className="three-quarter-spinner"></div>
+          </div>
+        </div>
+      )}
       <div className="margintop">
         <Row>
           <Col xl="12" lg="12">
@@ -545,8 +525,8 @@ const CreateInvoice = () => {
                               value={
                                 invoiceData.due_date
                                   ? dayjs(invoiceData.due_date).format(
-                                      "YYYY-MM-DD"
-                                    )
+                                    "YYYY-MM-DD"
+                                  )
                                   : "-"
                               }
                               onChange={handleChange}
@@ -556,9 +536,8 @@ const CreateInvoice = () => {
                       </div>
                       <button
                         type="submit"
-                        className={`btn btn-primary btn-block mb-4 w-100 ${
-                          isSubmitting ? "disabled" : ""
-                        }`}
+                        className={`btn btn-primary btn-block mb-4 w-100 ${isSubmitting ? "disabled" : ""
+                          }`}
                         onClick={handleSubmit}
                         disabled={isSubmitting}
                       >
@@ -700,33 +679,33 @@ const CreateInvoice = () => {
                               </div>
                             </>
                           ) : (
-                            // Dummy data if formData is not available
+                            // Enter data if formData is not available
                             <>
                               <div class="col-8">
                                 <h5>
-                                  <b>Dummy Company Name</b>
+                                  <b>Enter Company Name</b>
                                 </h5>
                                 <p style={{ fontSize: "13px" }} class="mt-1">
-                                  Dummy Company Address
+                                  Enter Company Address
                                 </p>
                                 <p style={{ fontSize: "13px" }}>
                                   Phone no.:
-                                  <strong>Dummy Phone</strong>
+                                  <strong>Enter Phone</strong>
                                 </p>
                                 <p style={{ fontSize: "13px" }}>
                                   Email:
-                                  <strong>Dummy Email</strong>
+                                  <strong>Enter Email</strong>
                                 </p>
                                 <p style={{ fontSize: "13px" }}>
                                   GSTIN:
-                                  <strong>Dummy GSTIN</strong>
+                                  <strong>Enter GSTIN</strong>
                                 </p>
                               </div>
                               <div className="col-4">
                                 <div>
                                   <img
                                     alt=""
-                                    src="dummy-logo-url.jpg"
+                                    src="Enter-logo-url.jpg"
                                     width={"100%"}
                                   />
                                 </div>
@@ -737,22 +716,22 @@ const CreateInvoice = () => {
                         <Row className="border mx-0">
                           <div class="col-5 border px-0">
                             <div class="invoice-details ">
-                              <div class="bill-to">Bill To</div>
+                              <div class="bill-to px-2">Bill To :-</div>
                               <strong>
                                 <p
-                                  class="mt-2 ml-10"
+                                  class="mt-2 px-2"
                                   style={{ fontSize: "14px" }}
                                 >
                                   {invoicePDFData.name !== null
                                     ? invoicePDFData.name
-                                    : "Dummy Full Name"}
+                                    : "Enter Full Name"}
                                 </p>
                               </strong>
                               <strong>
                                 <p class="px-2" style={{ fontSize: "14px" }}>
                                   {invoicePDFData.email !== null
                                     ? invoicePDFData.email
-                                    : "Dummy Email"}
+                                    : "Enter Email"}
                                 </p>
                               </strong>
                             </div>
@@ -771,7 +750,9 @@ const CreateInvoice = () => {
                                 <strong>Date :-</strong>
                                 <span>
                                   {invoicePDFData.date !== null
-                                    ? invoicePDFData.date
+                                    ? dayjs(invoicePDFData.date).format(
+                                      "DD-MM-YYYY"
+                                    )
                                     : "-/-/-"}
                                 </span>
                               </p>
@@ -788,7 +769,7 @@ const CreateInvoice = () => {
                                 <span>
                                   {invoicePDFData.address !== null
                                     ? invoicePDFData.address
-                                    : "Dummy Invoice Address"}
+                                    : "Enter Invoice Address"}
                                 </span>
                               </p>
                             </div>
@@ -803,7 +784,7 @@ const CreateInvoice = () => {
                                   {" "}
                                   {invoicePDFData.item_name !== null
                                     ? invoicePDFData.item_name
-                                    : "Dummy Product Name"}
+                                    : "Enter Service Name"}
                                 </span>
                               </p>
                             </div>
@@ -848,7 +829,7 @@ const CreateInvoice = () => {
                               <span>
                                 {invoicePDFData.note !== null
                                   ? invoicePDFData.note
-                                  : "Dummy Note"}
+                                  : "Enter Note"}
                               </span>
                             </p>
                           </div>
@@ -858,7 +839,9 @@ const CreateInvoice = () => {
                               <b></b>{" "}
                               <span>
                                 {invoicePDFData.due_date !== null
-                                  ? invoicePDFData.due_date
+                                  ? dayjs(invoicePDFData.due_date).format(
+                                    "DD-MM-YYYY"
+                                  )
                                   : "-/-/-"}
                               </span>
                             </p>

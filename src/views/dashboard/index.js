@@ -40,7 +40,6 @@ const Index = memo((props) => {
         setAdminData(adminData)
       } catch (error) {
         console.error('Error fetching admin details:', error);
-        toast.error('Error fetching admin details');
       }
     };
 
@@ -52,7 +51,6 @@ const Index = memo((props) => {
         setDashboardData(dashboardData)
       } catch (error) {
         console.error('Error fetching admin details:', error);
-        toast.error('Error fetching admin details');
       }
     };
 
@@ -220,7 +218,6 @@ const Index = memo((props) => {
         }
       } catch (error) {
         console.error('Error fetching admin details:', error);
-        toast.error('Error fetching admin details');
       }
     };
 
@@ -239,7 +236,7 @@ const Index = memo((props) => {
     // Format the phone number (remove leading '+')
     const formattedPhoneNumber = phoneNumber.replace(/^\+/, '');
 
-    // Construct the WhatsApp message with company name, contact details, invoice information, and product name
+    // Construct the WhatsApp message with company name, contact details, invoice information, and Service Name
     const message = `Hi ${invoice.fullName},\n\n`
       + `You have a due amount of ₹${invoice.dueAmount} for the product "${invoice.productName}".\n`
       + `Please make the payment at your earliest convenience.\n\n`
@@ -271,7 +268,6 @@ const Index = memo((props) => {
         setInvoice(response.data.data);
       } catch (error) {
         console.error('Error fetching user data:', error);
-        toast.error('Error fetching user data');
       }
     };
 
@@ -342,7 +338,6 @@ const Index = memo((props) => {
         setExpense(response.data.data);
       } catch (error) {
         console.error('Error fetching user data:', error);
-        toast.error('Error fetching user data');
       }
     };
 
@@ -461,7 +456,7 @@ const Index = memo((props) => {
             </Col>
           </Row>
         </Col>
-         <Col sm="12">
+        <Col sm="12">
           <Row>
             <Col className='col-md-7 col-12' >
               <Card style={{ padding: '20px', boxShadow: '5px 5px 30px #d2e5ff', }}>
@@ -516,7 +511,7 @@ const Index = memo((props) => {
                         <tr className="ligth">
                           <th style={{ fontSize: '14px', padding: '8px' }}>No.</th>
                           <th style={{ fontSize: '14px', padding: '8px' }}>User Name</th>
-                          <th style={{ fontSize: '14px', padding: '8px' }}>Product Name</th>
+                          <th style={{ fontSize: '14px', padding: '8px' }}>Service Name</th>
                           <th style={{ fontSize: '14px', padding: '8px' }}>Purchase Date</th>
                           <th style={{ fontSize: '14px', padding: '8px' }}>Due Amount</th>
                           <th style={{ fontSize: '14px', padding: '8px' }}>Action</th>
@@ -529,8 +524,8 @@ const Index = memo((props) => {
                     </div>
                   </div>
                 </Card.Body>
-              </Card >
-            </Col >
+              </Card>
+            </Col>
             <Col className='col-md-5 col-12' >
               <Card style={{ padding: '20px', boxShadow: '2px 2px 10px #d2e5ff', }}>
                 <Card.Header className="d-flex justify-content-between pt-0 px-0">

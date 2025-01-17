@@ -25,7 +25,8 @@ const SalesList = () => {
   const [employee, setEmployee] = useState([]);
   const [invoiceStats, setInvoiceStats] = useState({});
   const [showDateRangePicker, setShowDateRangePicker] = useState(false);
-	const [metaData, setMetaData] = useState()
+  const [metaData, setMetaData] = useState();
+  const [loadingOne, setLoadingOne] = useState(false);
   const [dateRange, setDateRange] = useState([
     {
       startDate: new Date(new Date().setMonth(new Date().getMonth() - 1)),
@@ -55,10 +56,12 @@ const SalesList = () => {
 
   const fetchData = async (page) => {
     try {
+      setLoadingOne(true);
       const response = await axiosInstance.get(`/invoice/get?page=${page || pagination.page}&limit=${pagination.itemsPerPage}&search=${searchTerm}&sort=${sort}&sortOrder=${sortOrder}`);
       setEmployee(response.data.data);
-			const metaData = response.metadata
-			setMetaData(metaData.pagination)
+      const metaData = response.data.metadata
+      setMetaData(metaData.pagination)
+      setLoadingOne(false);
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -71,12 +74,12 @@ const SalesList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoadingOne(true);
         const response = await axiosInstance.get("/invoice/stats");
         setInvoiceStats(response?.data?.data?.[0]);
-        console.log(response?.data?.data?.[0]);
+        setLoadingOne(false);
       } catch (error) {
         console.error("Error fetching user data:", error);
-        toast.error("Error fetching user data");
       }
     };
 
@@ -119,10 +122,12 @@ const SalesList = () => {
 
   const removeUser = async (invoiceID) => {
     try {
-      await axiosInstance.post(`/invoice/remove?id=${invoiceID}`);
+      // setLoadingOne(true);
+      await axiosInstance.delete(`/invoice/delete?id=${invoiceID}`);
       setEmployee((prevUsers) =>
         prevUsers.filter((user) => user._id !== invoiceID)
       );
+      // setLoadingOne(false);
       toast.success("Invoice removed successfully");
     } catch (error) {
       console.error("Error removing Invoice:", error);
@@ -136,8 +141,10 @@ const SalesList = () => {
       <td>{invoice.name}</td>
       <td>{invoice.mobile}</td>
       <td>{invoice.paid_amount}</td>
+      <td>{invoice.net_amount - invoice.paid_amount}</td>
       <td>{invoice.net_amount}</td>
       <td>{new Date(invoice.createdAt).toLocaleDateString()}</td>
+      <td>{new Date(invoice.due_date).toLocaleDateString()}</td>
       <td>
         <div className="flex align-items-center list-user-action">
           <Link
@@ -165,6 +172,13 @@ const SalesList = () => {
 
   return (
     <>
+      {loadingOne && (
+        <div className="loader-background">
+          <div className="spinner-box">
+            <div className="three-quarter-spinner"></div>
+          </div>
+        </div>
+      )}
       <div className="margintop">
         <Row>
           <Col sm="12">
@@ -397,8 +411,10 @@ const SalesList = () => {
                         <th>User Name</th>
                         <th>Mobile</th>
                         <th>Paid Amount</th>
+                        <th>Due Amount</th>
                         <th>Total Amount</th>
                         <th>Purchase Date</th>
+                        <th>Due Date</th>
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -408,22 +424,17 @@ const SalesList = () => {
                     <div className="text-center">No data found.</div>
                   )}
                 </div>
-                <div className="pagination-container">
-                  <Stack spacing={2}>
-                    {/* <Pagination
-                      count={Math.ceil(employee.length / itemsPerPage)}
-                      page={currentPage + 1}
-                      onChange={handlePageChange}
-                      variant="outlined"
-                      shape="rounded"
-                    /> */}
-                    <UsersListPagination
-                      totalPages={metaData?.totalPages}
-                      currentPage={pagination.page}
-                      onPageChange={handlePageChange}
-                    />
-                  </Stack>
-                </div>
+                {
+                  displayEmployee.length !== 0 && (
+                    <div className="pagination-container">
+                      <UsersListPagination
+                        totalPages={metaData?.totalPages}
+                        currentPage={pagination.page}
+                        onPageChange={handlePageChange}
+                      />
+                    </div>
+                  )
+                }
               </Card.Body>
             </Card>
           </Col>

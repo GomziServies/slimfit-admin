@@ -64,7 +64,6 @@ const AdminProfile = () => {
         }
       } catch (error) {
         console.error('Error fetching admin details:', error);
-        toast.error('Error fetching admin details');
       }
     };
 

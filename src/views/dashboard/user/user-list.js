@@ -77,7 +77,6 @@ const UserList = () => {
         setUsers(response.data.data);
       } catch (error) {
         console.error('Error fetching user data:', error);
-        toast.error('Error fetching user data');
       }
     };
 

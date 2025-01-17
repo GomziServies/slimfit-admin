@@ -29,7 +29,6 @@ const AdminList = () => {
         setAdmins(response.data.data);
       } catch (error) {
         console.error('Error fetching admin data:', error);
-        toast.error('Error fetching admin data');
       }
     };
 
@@ -44,7 +43,6 @@ const AdminList = () => {
         setLoggedInAdminId(adminData._id);
       } catch (error) {
         console.error('Error fetching admin details:', error);
-        toast.error('Error fetching admin details');
       }
     };
 

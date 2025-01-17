@@ -23,11 +23,11 @@ const SearchFilter = ({ searchTerm, setSearchTerm, style }) => {
 					iconName='magnifier'
 					className='fs-1 position-absolute ms-6'
 				/> */}
-                <SearchIcon />
+				<SearchIcon />
 				<input
 					type='text'
 					data-kt-user-table-filter='search'
-					className='form-control form-control-solid bg-secondary w-250px ps-14'
+					className='form-control form-control-solid bg-white w-250px ps-14'
 					placeholder='Search...'
 					value={localSearchTerm}
 					onChange={(e) => setLocalSearchTerm(e.target.value)}

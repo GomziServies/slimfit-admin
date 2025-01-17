@@ -11,18 +11,20 @@ import SalesList from '../views/dashboard/invoice/sales-list'
 
 //Booking
 import Default from '../layouts/dashboard/default'
-
-
+import Protect from '../views/dashboard/components/Protect'
 
 export const DefaultRouter = [
   {
     path: '/',
-    element: <Default />,
+    element: (
+      <Protect>
+        <Default />
+      </Protect>),
     children: [
-      {
-        path: 'dashboard',
-        element: <Index />,
-      },
+      // {
+      //   path: 'dashboard',
+      //   element: <Index />,
+      // },
       {
         path: 'dashboard/create-invoice',
         element: <CreateInvoice />,

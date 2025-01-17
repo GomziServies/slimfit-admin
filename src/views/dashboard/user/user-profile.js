@@ -74,7 +74,6 @@ const UserProfile = () => {
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
-      toast.error('Error fetching user data');
     }
   };
 

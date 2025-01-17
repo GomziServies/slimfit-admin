@@ -15,6 +15,7 @@ const CreateInvoice = () => {
   const searchParams = new URLSearchParams(location.search);
   const invoice_id = searchParams.get("invoice_id");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loadingOne, setLoadingOne] = useState(false);
 
   // Invoice Data Get
   const [invoiceData, setInvoiceData] = useState({
@@ -60,6 +61,7 @@ const CreateInvoice = () => {
 
   const fetchInvoice = async () => {
     try {
+      setLoadingOne(true);
       const response = await axiosInstance.get(`/invoice/get?id=${invoice_id}`);
       if (response.data && response.data.data.length > 0) {
         const allData = response.data.data[0];
@@ -99,15 +101,15 @@ const CreateInvoice = () => {
           due_date: allData.due_date,
         }));
       }
+      setLoadingOne(false);
     } catch (error) {
       console.error("Error fetching Invoice:", error);
-      toast.error("Error fetching Invoice");
     }
   };
-  
+
   useEffect(() => {
     fetchInvoice();
-  }, [fetchInvoice]);
+  }, []);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -121,6 +123,7 @@ const CreateInvoice = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
+      setLoadingOne(true);
       const payload = {
         ...invoiceData,
         net_amount: parseInt(invoiceData.net_amount),
@@ -130,6 +133,7 @@ const CreateInvoice = () => {
       };
 
       const response = await axiosInstance.post(`/invoice/update`, payload);
+      setLoadingOne(false);
       if (response.data && !response.data.error) {
         toast.success("Invoice Updated successfully!");
         setIsSubmitting(false);
@@ -149,8 +153,8 @@ const CreateInvoice = () => {
   const pdfContainerRef = useRef(null);
 
   const handleDownloadPDF = () => {
+    setLoadingOne(true);
     const element = pdfContainerRef.current;
-
     if (element) {
       const options = {
         margin: 10,
@@ -159,8 +163,8 @@ const CreateInvoice = () => {
         html2canvas: { scale: 4, useCORS: true },
         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
       };
-
       html2pdf(element, options);
+      setLoadingOne(false);
     } else {
       toast.error("Error generating PDF. Please try again.");
     }
@@ -198,7 +202,6 @@ const CreateInvoice = () => {
         // }
       } catch (error) {
         console.error("Error fetching admin details:", error);
-        toast.error("Error fetching admin details");
       }
     };
 
@@ -207,6 +210,13 @@ const CreateInvoice = () => {
 
   return (
     <>
+      {loadingOne && (
+        <div className="loader-background">
+          <div className="spinner-box">
+            <div className="three-quarter-spinner"></div>
+          </div>
+        </div>
+      )}
       <div className="margintop">
         <Row>
           <Col xl="12" lg="12">
@@ -486,8 +496,8 @@ const CreateInvoice = () => {
                               value={
                                 invoiceData.due_date
                                   ? dayjs(invoiceData.due_date).format(
-                                      "YYYY-MM-DD"
-                                    )
+                                    "YYYY-MM-DD"
+                                  )
                                   : "-"
                               }
                               onChange={handleChange}
@@ -497,9 +507,8 @@ const CreateInvoice = () => {
                       </div>
                       <button
                         type="submit"
-                        className={`btn btn-primary btn-block mb-4 w-100 ${
-                          isSubmitting ? "disabled" : ""
-                        }`}
+                        className={`btn btn-primary btn-block mb-4 w-100 ${isSubmitting ? "disabled" : ""
+                          }`}
                         onClick={handleSubmit}
                         disabled={isSubmitting}
                       >
@@ -641,33 +650,33 @@ const CreateInvoice = () => {
                               </div>
                             </>
                           ) : (
-                            // Dummy data if formData is not available
+                            // Enter data if formData is not available
                             <>
                               <div class="col-8">
                                 <h5>
-                                  <b>Dummy Company Name</b>
+                                  <b>Enter Company Name</b>
                                 </h5>
                                 <p style={{ fontSize: "13px" }} class="mt-1">
-                                  Dummy Company Address
+                                  Enter Company Address
                                 </p>
                                 <p style={{ fontSize: "13px" }}>
                                   Phone no.:
-                                  <strong>Dummy Phone</strong>
+                                  <strong>Enter Phone</strong>
                                 </p>
                                 <p style={{ fontSize: "13px" }}>
                                   Email:
-                                  <strong>Dummy Email</strong>
+                                  <strong>Enter Email</strong>
                                 </p>
                                 <p style={{ fontSize: "13px" }}>
                                   GSTIN:
-                                  <strong>Dummy GSTIN</strong>
+                                  <strong>Enter GSTIN</strong>
                                 </p>
                               </div>
                               <div className="col-4">
                                 <div>
                                   <img
                                     alt=""
-                                    src="dummy-logo-url.jpg"
+                                    src="Enter-logo-url.jpg"
                                     width={"100%"}
                                   />
                                 </div>
@@ -678,22 +687,22 @@ const CreateInvoice = () => {
                         <Row className="border mx-0">
                           <div class="col-5 border px-0">
                             <div class="invoice-details ">
-                              <div class="bill-to">Bill To</div>
+                              <div class="bill-to px-2">Bill To :-</div>
                               <strong>
                                 <p
-                                  class="mt-2 ml-10"
+                                  class="mt-2 px-2"
                                   style={{ fontSize: "14px" }}
                                 >
                                   {invoicePDFData.name !== null
                                     ? invoicePDFData.name
-                                    : "Dummy Full Name"}
+                                    : "Enter Full Name"}
                                 </p>
                               </strong>
                               <strong>
                                 <p class="px-2" style={{ fontSize: "14px" }}>
                                   {invoicePDFData.email !== null
                                     ? invoicePDFData.email
-                                    : "Dummy Email"}
+                                    : "Enter Email"}
                                 </p>
                               </strong>
                             </div>
@@ -712,8 +721,10 @@ const CreateInvoice = () => {
                                 <strong>Date :-</strong>
                                 <span>
                                   {invoicePDFData.date !== null
-                                    ? invoicePDFData.date
-                                    : "09/09/0009"}
+                                    ? dayjs(invoicePDFData.date).format(
+                                      "DD-MM-YYYY"
+                                    )
+                                    : "-/-/-"}
                                 </span>
                               </p>
                               <p class="">
@@ -729,7 +740,7 @@ const CreateInvoice = () => {
                                 <span>
                                   {invoicePDFData.address !== null
                                     ? invoicePDFData.address
-                                    : "Dummy Invoice Address"}
+                                    : "Enter Invoice Address"}
                                 </span>
                               </p>
                             </div>
@@ -744,7 +755,7 @@ const CreateInvoice = () => {
                                   {" "}
                                   {invoicePDFData.item_name !== null
                                     ? invoicePDFData.item_name
-                                    : "Dummy Product Name"}
+                                    : "Enter Service Name"}
                                 </span>
                               </p>
                             </div>
@@ -789,7 +800,7 @@ const CreateInvoice = () => {
                               <span>
                                 {invoicePDFData.note !== null
                                   ? invoicePDFData.note
-                                  : "Dummy Note"}
+                                  : "Enter Note"}
                               </span>
                             </p>
                           </div>
@@ -799,7 +810,9 @@ const CreateInvoice = () => {
                               <b></b>{" "}
                               <span>
                                 {invoicePDFData.due_date !== null
-                                  ? invoicePDFData.due_date
+                                  ? dayjs(invoicePDFData.due_date).format(
+                                    "DD-MM-YYYY"
+                                  )
                                   : "-/-/-"}
                               </span>
                             </p>

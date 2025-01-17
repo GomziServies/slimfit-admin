@@ -10,28 +10,35 @@ import { Provider } from "react-redux";
 //reducer
 import { store } from "./store";
 
-// import Index from "./views/index";
 import Default from './layouts/dashboard/default';
 import { IndexRouters } from "./router";
 import { SimpleRouter } from "./router/simple-router";
 import { DefaultRouter } from "./router/default-router";
+import Protect from "./views/dashboard/components/Protect";
+import PageNotFound from "./views/dashboard/page-not-found";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Default />,
+    element: (
+      <Protect>
+        <Default />
+      </Protect>
+    ),
   },
   ...DefaultRouter,
   ...IndexRouters,
-  ...SimpleRouter
+  ...SimpleRouter,
+  {
+    path: "*",
+    element: <PageNotFound />,
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
-      <App>
-        <RouterProvider router={router}></RouterProvider>
-      </App>
+      <RouterProvider router={router} />
     </Provider>
   </React.StrictMode>
 );
