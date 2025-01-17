@@ -79,7 +79,7 @@ const SignIn = () => {
                       <Form.Group className="mb-3">
                         <Form.Control
                           type="email"
-                          placeholder="Email or Mobile no."
+                          placeholder="Email"
                           name="email"
                           value={email}
                           onChange={handleEmailChange}
